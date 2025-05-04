@@ -12,7 +12,6 @@ import {
   SidebarFooter,
   SidebarMenu,
   SidebarMenuItem,
-  SidebarMenuButton,
   SidebarGroup,
   SidebarTrigger
 } from "@/components/ui/sidebar";
@@ -43,6 +42,7 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function AdminLayout() {
   const { user, logout } = useAuth();
@@ -51,13 +51,14 @@ export default function AdminLayout() {
   const location = useLocation();
   const [isMounted, setIsMounted] = useState(false);
   const [notifications, setNotifications] = useState<{ id: string; title: string; message: string }[]>([]);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     setIsMounted(true);
     // Mock notifications for demo purposes
     setNotifications([
-      { id: '1', title: 'New user registered', message: 'A new user has registered on your platform' },
-      { id: '2', title: 'System update', message: 'System will be updated tonight at 2 AM' }
+      { id: '1', title: 'Pengguna baru terdaftar', message: 'Seorang pengguna baru telah mendaftar di platform Anda' },
+      { id: '2', title: 'Update sistem', message: 'Sistem akan diperbarui malam ini jam 2 pagi' }
     ]);
   }, []);
 
@@ -69,7 +70,7 @@ export default function AdminLayout() {
 
   const handleLogout = () => {
     logout();
-    toast.success("Logged out successfully");
+    toast.success("Berhasil keluar");
     navigate("/auth/login");
   };
 
@@ -77,7 +78,7 @@ export default function AdminLayout() {
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
     { name: "Blog", href: "/admin/blog", icon: FileText },
     { name: "Templates", href: "/admin/templates", icon: Layers },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
+    { name: "Pengaturan", href: "/admin/settings", icon: Settings },
   ];
 
   const isLinkActive = (path: string) => {
@@ -180,7 +181,7 @@ export default function AdminLayout() {
               <SidebarMenuItem>
                 <button onClick={handleLogout} className="flex items-center gap-3 text-destructive hover:text-destructive w-full text-left">
                   <LogOut className="h-5 w-5" />
-                  <span>Logout</span>
+                  <span>Keluar</span>
                 </button>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -189,66 +190,70 @@ export default function AdminLayout() {
 
         <div className="flex-1 flex flex-col min-h-screen overflow-hidden">
           {/* Header */}
-          <header className="h-16 border-b bg-background flex items-center px-4">
+          <header className="h-14 sm:h-16 border-b bg-background flex items-center px-2 sm:px-4">
             <div className="flex-1 flex items-center">
               <SidebarTrigger>
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
-                  <span className="sr-only">Toggle menu</span>
+                <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9">
+                  <Menu className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <span className="sr-only">Buka menu</span>
                 </Button>
               </SidebarTrigger>
               
-              <nav className="ml-4">
-                <Breadcrumb>
-                  <BreadcrumbList>
-                    {breadcrumbs.map((crumb, index) => (
-                      <BreadcrumbItem key={crumb.href}>
-                        <BreadcrumbLink 
-                          href={crumb.href} 
-                          className={crumb.current ? "font-semibold" : ""}
-                        >
-                          {crumb.name}
-                        </BreadcrumbLink>
-                        {index < breadcrumbs.length - 1 && (
-                          <BreadcrumbSeparator>
-                            <ChevronRight className="h-4 w-4" />
-                          </BreadcrumbSeparator>
-                        )}
-                      </BreadcrumbItem>
-                    ))}
-                  </BreadcrumbList>
-                </Breadcrumb>
-              </nav>
+              {!isMobile ? (
+                <nav className="ml-4">
+                  <Breadcrumb>
+                    <BreadcrumbList>
+                      {breadcrumbs.map((crumb, index) => (
+                        <BreadcrumbItem key={crumb.href}>
+                          <BreadcrumbLink 
+                            href={crumb.href} 
+                            className={crumb.current ? "font-semibold" : ""}
+                          >
+                            {crumb.name}
+                          </BreadcrumbLink>
+                          {index < breadcrumbs.length - 1 && (
+                            <BreadcrumbSeparator>
+                              <ChevronRight className="h-4 w-4" />
+                            </BreadcrumbSeparator>
+                          )}
+                        </BreadcrumbItem>
+                      ))}
+                    </BreadcrumbList>
+                  </Breadcrumb>
+                </nav>
+              ) : (
+                <h2 className="ml-3 text-base font-medium">{pageTitle}</h2>
+              )}
             </div>
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
-                    <Bell className="h-5 w-5" />
+                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9 relative">
+                    <Bell className="h-4 w-4 sm:h-5 sm:w-5" />
                     {notifications.length > 0 && (
-                      <span className="absolute top-1 right-1 flex h-3 w-3">
+                      <span className="absolute top-1 right-1 flex h-2 w-2 sm:h-3 sm:w-3">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 sm:h-3 sm:w-3 bg-primary"></span>
                       </span>
                     )}
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-80">
-                  <DropdownMenuLabel>Notifications</DropdownMenuLabel>
+                <DropdownMenuContent align="end" className="w-64 sm:w-80">
+                  <DropdownMenuLabel>Notifikasi</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {notifications.length > 0 ? (
                     notifications.map(notification => (
                       <DropdownMenuItem key={notification.id} className="cursor-pointer">
                         <div className="flex flex-col">
-                          <span className="font-medium">{notification.title}</span>
-                          <span className="text-sm text-muted-foreground">{notification.message}</span>
+                          <span className="font-medium text-xs sm:text-sm">{notification.title}</span>
+                          <span className="text-[10px] sm:text-xs text-muted-foreground">{notification.message}</span>
                         </div>
                       </DropdownMenuItem>
                     ))
                   ) : (
                     <div className="text-center py-4">
-                      <p className="text-sm text-muted-foreground">No new notifications</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">Tidak ada notifikasi baru</p>
                     </div>
                   )}
                 </DropdownMenuContent>
@@ -256,23 +261,23 @@ export default function AdminLayout() {
               
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9">
-                    <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-                    <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-                    <span className="sr-only">Toggle theme</span>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 sm:h-9 sm:w-9">
+                    <Sun className="h-4 w-4 sm:h-[1.2rem] sm:w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute h-4 w-4 sm:h-[1.2rem] sm:w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span className="sr-only">Ubah tema</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("light")}>Terang</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("dark")}>Gelap</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setTheme("system")}>Sistem</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                    <Avatar className="h-8 w-8">
+                  <Button variant="ghost" className="relative h-7 w-7 sm:h-8 sm:w-8 rounded-full">
+                    <Avatar className="h-7 w-7 sm:h-8 sm:w-8">
                       <AvatarImage src="/placeholder.svg" alt={user.name} />
                       <AvatarFallback>{user.name.charAt(0)}</AvatarFallback>
                     </Avatar>
@@ -281,24 +286,24 @@ export default function AdminLayout() {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.name}</p>
-                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      <p className="text-xs sm:text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-[10px] sm:text-xs leading-none text-muted-foreground">{user.email}</p>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
-                    <Link to="/admin/settings" className="cursor-pointer">
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
+                    <Link to="/admin/settings" className="cursor-pointer text-xs sm:text-sm">
+                      <Settings className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                      <span>Pengaturan</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    className="flex cursor-pointer items-center text-destructive focus:text-destructive"
+                    className="flex cursor-pointer items-center text-destructive focus:text-destructive text-xs sm:text-sm"
                     onClick={handleLogout}
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <LogOut className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                    <span>Keluar</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -307,7 +312,7 @@ export default function AdminLayout() {
 
           {/* Main content */}
           <main className="flex-1 overflow-auto">
-            <div className="container py-6">
+            <div className="container py-4 sm:py-6">
               <Outlet />
             </div>
           </main>
