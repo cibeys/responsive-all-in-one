@@ -102,8 +102,8 @@ export default function AdminLayout() {
               <SidebarMenu>
                 {navigation.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild active={isLinkActive(item.href)}>
-                      <Link to={item.href} className="flex items-center gap-3">
+                    <SidebarMenuButton asChild>
+                      <Link to={item.href} className={`flex items-center gap-3 ${isLinkActive(item.href) ? 'font-medium text-primary' : ''}`}>
                         <item.icon className="h-5 w-5" />
                         <span>{item.name}</span>
                       </Link>
