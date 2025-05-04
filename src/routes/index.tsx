@@ -25,7 +25,7 @@ import TemplatesManagementPage from "@/features/templates/pages/TemplatesManagem
 import TemplateEditorPage from "@/features/templates/pages/TemplateEditor";
 import SettingsPage from "@/features/settings/pages/Settings";
 
-// Auth Provider
+// Providers
 import { AuthProvider } from "@/features/auth/providers/AuthProvider";
 import { ThemeProvider } from "@/features/theme/providers/ThemeProvider";
 

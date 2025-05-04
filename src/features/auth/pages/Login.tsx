@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const formSchema = z.object({
   email: z.string().email("Invalid email address"),
@@ -29,6 +29,7 @@ export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -51,10 +52,15 @@ export default function LoginPage() {
         toast.error("Invalid email or password");
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error("An error occurred during login");
+      console.error(error);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -73,7 +79,15 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="admin@example.com" type="email" {...field} />
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      placeholder="admin@example.com" 
+                      type="email" 
+                      className="pl-10" 
+                      {...field} 
+                    />
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -87,7 +101,31 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder="******" type="password" {...field} />
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <Input 
+                      placeholder="******" 
+                      type={showPassword ? "text" : "password"} 
+                      className="pl-10"
+                      {...field} 
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-1 top-1 h-8 w-8"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4" />
+                      ) : (
+                        <Eye className="h-4 w-4" />
+                      )}
+                      <span className="sr-only">
+                        {showPassword ? "Hide password" : "Show password"}
+                      </span>
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -101,10 +139,12 @@ export default function LoginPage() {
             </Button>
           </div>
           
-          <div className="text-center text-sm text-muted-foreground mt-4">
-            <p>Demo credentials:</p>
-            <p>Email: admin@example.com</p>
-            <p>Password: Admin1234</p>
+          <div className="mt-6 p-4 bg-muted/50 rounded-md border border-border">
+            <h3 className="text-sm font-medium mb-2">Demo Credentials</h3>
+            <div className="text-sm text-muted-foreground space-y-1">
+              <p><span className="font-medium">Email:</span> admin@example.com</p>
+              <p><span className="font-medium">Password:</span> Admin1234</p>
+            </div>
           </div>
         </form>
       </Form>
