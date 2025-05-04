@@ -51,7 +51,9 @@ export const routes: RouteObject[] = [
     path: "/auth",
     element: (
       <ThemeProvider>
-        <AuthLayout />
+        <AuthProvider>
+          <AuthLayout />
+        </AuthProvider>
       </ThemeProvider>
     ),
     children: [{ path: "login", element: <LoginPage /> }],
