@@ -10,11 +10,11 @@ import {
   SidebarContent, 
   SidebarHeader,
   SidebarFooter,
-  SidebarTrigger,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
-  SidebarGroup
+  SidebarGroup,
+  SidebarTrigger
 } from "@/components/ui/sidebar";
 import { toast } from "sonner";
 import {
@@ -26,7 +26,6 @@ import {
   Sun,
   Moon,
   Menu,
-  User,
   Bell,
   ChevronRight
 } from "lucide-react";
@@ -88,7 +87,7 @@ export default function AdminLayout() {
     return path !== "/admin" && location.pathname.startsWith(path);
   };
 
-  // Get current page title for breadcrumb
+  // Get current page info for breadcrumb
   const getCurrentPageInfo = () => {
     const currentPath = location.pathname;
     
@@ -166,12 +165,10 @@ export default function AdminLayout() {
               <SidebarMenu>
                 {navigation.map((item) => (
                   <SidebarMenuItem key={item.name}>
-                    <SidebarMenuButton asChild>
-                      <Link to={item.href} className={`flex items-center gap-3 ${isLinkActive(item.href) ? 'font-medium text-primary' : ''}`}>
-                        <item.icon className="h-5 w-5" />
-                        <span>{item.name}</span>
-                      </Link>
-                    </SidebarMenuButton>
+                    <Link to={item.href} className={`flex items-center gap-3 ${isLinkActive(item.href) ? 'font-medium text-primary' : ''}`}>
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.name}</span>
+                    </Link>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
@@ -181,10 +178,10 @@ export default function AdminLayout() {
           <SidebarFooter>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton onClick={handleLogout} className="flex items-center gap-3 text-destructive hover:text-destructive">
+                <button onClick={handleLogout} className="flex items-center gap-3 text-destructive hover:text-destructive w-full text-left">
                   <LogOut className="h-5 w-5" />
                   <span>Logout</span>
-                </SidebarMenuButton>
+                </button>
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarFooter>
@@ -194,7 +191,7 @@ export default function AdminLayout() {
           {/* Header */}
           <header className="h-16 border-b bg-background flex items-center px-4">
             <div className="flex-1 flex items-center">
-              <SidebarTrigger asChild>
+              <SidebarTrigger>
                 <Button variant="ghost" size="icon">
                   <Menu className="h-5 w-5" />
                   <span className="sr-only">Toggle menu</span>

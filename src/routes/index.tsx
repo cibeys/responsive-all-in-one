@@ -67,6 +67,7 @@ export const routes: RouteObject[] = [
         </AuthProvider>
       </ThemeProvider>
     ),
+    errorElement: <NotFound />,
     children: [
       { index: true, element: <DashboardPage /> },
       { path: "blog", element: <BlogManagementPage /> },
